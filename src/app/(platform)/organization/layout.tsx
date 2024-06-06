@@ -1,11 +1,10 @@
 import { ModeToggle } from "@/components/global/mode-toggle";
-import NavBar from "@/components/global/navbar";
-
+import NavBar from "./_components/navbar";
 type Props = {
   children: React.ReactNode;
 };
 
-const MarketingLayout = ({ children }: Props) => {
+const Layout = ({ children }: Props) => {
   return (
     <div className="h-screen bg-slate-100 dark:bg-background">
       <NavBar />
@@ -17,4 +16,4 @@ const MarketingLayout = ({ children }: Props) => {
   );
 };
 
-export default MarketingLayout;
+export default Layout;

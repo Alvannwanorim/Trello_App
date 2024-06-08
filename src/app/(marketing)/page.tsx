@@ -1,4 +1,4 @@
-import CustomeButton from "@/components/global/custom-button";
+import CustomButton from "@/components/global/custom-button";
 import { cn } from "@/lib/utils";
 import { Medal } from "lucide-react";
 import { Poppins } from "next/font/google";
@@ -9,7 +9,7 @@ const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-const MarcketingPage = () => {
+const MarketingPage = () => {
   return (
     <div
       className={cn(
@@ -35,10 +35,10 @@ const MarcketingPage = () => {
         accomplish at all with Taskify.
       </div>
       <div className="mt-3">
-        <CustomeButton label="Get Taskify for free" link="sign-up" />
+        <CustomButton label="Get Taskify for free" link="organization" />
       </div>
     </div>
   );
 };
 
-export default MarcketingPage;
+export default MarketingPage;

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { LoginSchema } from "@/schemas";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Form, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,6 +25,7 @@ import Link from "next/link";
 import FormError from "@/components/form/form-error";
 
 import { useRouter } from "next/navigation";
+import { signIn } from "@/actions/sign-in";
 
 const SignInForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -36,9 +37,23 @@ const SignInForm = () => {
   });
   const isLoading = form.formState.isSubmitting;
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
 
-  const submitHandler = (values: z.infer<typeof LoginSchema>) => {};
+  const submitHandler = (values: z.infer<typeof LoginSchema>) => {
+    startTransition(() => {
+      setError("");
+      signIn(values).then((data) => {
+        if (data?.error) setError(data.error);
+        if (data.success) {
+          setSuccess(data.success);
+          router.push("/");
+        }
+      });
+    });
+  };
 
   return (
     <Card className="w-[400px]">
@@ -103,7 +118,7 @@ const SignInForm = () => {
               type="submit"
               className="w-full mt-4"
               variant={"default"}
-              disabled={isLoading}
+              disabled={isPending}
             >
               Login
             </Button>

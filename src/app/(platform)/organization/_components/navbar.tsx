@@ -5,7 +5,10 @@ import React from "react";
 import OrganizationSwitcher from "./organization-switcher";
 import { currentUser, currentUserOrg } from "@/lib/auth";
 import UserButton from "@/components/global/user-button";
+import { ModeToggle } from "@/components/global/mode-toggle";
+import dynamic from "next/dynamic";
 
+const CustomModal = dynamic(() => import("./custom-modal"), { ssr: false });
 const NavBar = async () => {
   const userOrg = await currentUserOrg();
   const user = await currentUser();
@@ -16,21 +19,31 @@ const NavBar = async () => {
           <Logo />
         </div>
         <Button
+          variant={"link"}
           size={"sm"}
           className="rounded-sm hidden md:block h-auto py-1.5 px-2"
+          id="create-button"
         >
           Create
         </Button>
-        <Button size={"sm"} className="rounded-sm block md:hidden">
+
+        <Button
+          variant={"link"}
+          size={"sm"}
+          className="rounded-sm block md:hidden"
+          id="plus-button"
+        >
           <Plus className="h-4 w-4" />
         </Button>
+        <CustomModal />
       </div>
-      <div className="ml-auto flex items-center pap-x-2">
+      <div className="ml-auto flex items-center gap-x-2">
         {userOrg ? (
           <OrganizationSwitcher organization={userOrg} />
         ) : (
           user && <UserButton user={user} />
         )}
+        <ModeToggle />
       </div>
     </nav>
   );

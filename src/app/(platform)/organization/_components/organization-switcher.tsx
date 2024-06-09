@@ -11,7 +11,8 @@ import { Organization, User } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 
 const OrganizationSwitcher = ({
   organization,
@@ -25,19 +26,19 @@ const OrganizationSwitcher = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="focus:outline-none flex flex-row">
-          <Avatar>
-            <AvatarImage src={`${imgUrl}`} />
-            <AvatarFallback className="">{`${userInitials}`}</AvatarFallback>
-          </Avatar>
-          <Label>{organization.name}</Label>
-          <span className="flex flex-col">
-            <ChevronDown />
-            <ChevronUp />
-          </span>
+        <DropdownMenuTrigger className="focus:outline-none flex flex-row items-center justify-center w-full border rounded-md p-2">
+          <div className="flex flex-row gap-x-2 items-center justify-center">
+            <Image src={imgUrl} width={60} height={30} alt="" />
+            <ChevronDown className="h-4 w-4" />
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[300px]">
-          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <div className="flex flex-row w-full items-center justify-start gap-x-2">
+              <Image src={imgUrl} width={80} height={20} alt="" />
+              <h1>{organization.name}</h1>
+            </div>
+          </DropdownMenuItem>
           <Link href={`/organization`}>
             <DropdownMenuItem></DropdownMenuItem>
           </Link>

@@ -84,7 +84,7 @@ model VerificationToken {
  model Organization {
   id      String              @id @default(auto()) @map("_id") @db.ObjectId
   name    String
-  ownerId String              @map("owbner_id")
+  ownerId String              @map("owner_id")
   logo    String 
   email   String
   phone   String

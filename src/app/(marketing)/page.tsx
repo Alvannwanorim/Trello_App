@@ -35,7 +35,7 @@ const MarketingPage = () => {
         accomplish at all with Taskify.
       </div>
       <div className="mt-3">
-        <CustomButton label="Get Taskify for free" link="organization" />
+        <CustomButton label="Get Taskify for free" link="/organization" />
       </div>
     </div>
   );

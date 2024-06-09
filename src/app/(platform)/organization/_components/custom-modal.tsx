@@ -20,7 +20,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
-const CustomModal = () => {
+const CustomModal = ({
+  setRefresh,
+}: {
+  setRefresh: (title: boolean) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
   const [fileError, setFileError] = useState("");
@@ -28,7 +32,6 @@ const CustomModal = () => {
   const [success, setSuccess] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof OrganizationsSchema>>({
     resolver: zodResolver(OrganizationsSchema),
@@ -74,7 +77,7 @@ const CustomModal = () => {
         if (data.error) setError(data.error);
         if (data.success) {
           setSuccess(data.success);
-          router.push("/organization");
+          setIsOpen(false);
         }
       });
     });

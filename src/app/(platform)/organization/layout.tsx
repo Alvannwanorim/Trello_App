@@ -1,5 +1,5 @@
-import { ModeToggle } from "@/components/global/mode-toggle";
 import NavBar from "./_components/navbar";
+import Sidebar from "./_components/sidebar";
 type Props = {
   children: React.ReactNode;
 };
@@ -8,9 +8,11 @@ const Layout = ({ children }: Props) => {
   return (
     <div className="h-screen bg-slate-100 dark:bg-background">
       <NavBar />
-      <main className="pt-40 pb-20  bg-slate-100 dark:bg-background">
-        {children}
-        <ModeToggle />
+      <main className="flex w-full mt-14">
+        <div className=" w-1/5">
+          <Sidebar />
+        </div>
+        <div className="w-4/5">{children}</div>
       </main>
     </div>
   );

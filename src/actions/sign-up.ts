@@ -36,7 +36,7 @@ export const signUp = async (values: z.infer<typeof RegisterSchema>) => {
     });
 
     const curr = new Date(Date.now());
-    const expires = curr.setDate(curr.getDate() + 1);
+    const expires = curr.setDate(curr.getHours() + 1);
     const session = await encrypt({ name: user.name, id: user.id });
 
     cookies().set("session", session, { expires, httpOnly: true });

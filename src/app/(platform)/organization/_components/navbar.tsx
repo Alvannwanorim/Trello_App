@@ -1,17 +1,47 @@
+"use client";
 import Logo from "@/components/global/logo";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import OrganizationSwitcher from "./organization-switcher";
 import { currentUser, currentUserOrg } from "@/lib/auth";
 import UserButton from "@/components/global/user-button";
 import { ModeToggle } from "@/components/global/mode-toggle";
-import dynamic from "next/dynamic";
+import { Organization, User } from "@prisma/client";
+import CustomModal from "./custom-modal";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const CustomModal = dynamic(() => import("./custom-modal"), { ssr: false });
-const NavBar = async () => {
-  const userOrg = await currentUserOrg();
-  const user = await currentUser();
+const NavBar = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [org, setOrg] = useState<Organization | null>(null);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchData = async () => {
+      const userOrg = await currentUserOrg();
+      const currUser = await currentUser();
+
+      if (currUser) {
+        setUser(currUser);
+      }
+      if (userOrg) {
+        setOrg(userOrg);
+      }
+    };
+    fetchData();
+    setIsLoading(false);
+  }, [refresh]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full bg-accent">
+        <Skeleton className="w-full animate " />
+      </div>
+    );
+  }
+
   return (
     <nav className="fixed top-0 w-full h-14 px-4 border-b shadow-sm bg-white dark:bg-background flex items-center">
       <div className="flex items-center gap-x-4">
@@ -35,11 +65,11 @@ const NavBar = async () => {
         >
           <Plus className="h-4 w-4" />
         </Button>
-        <CustomModal />
+        <CustomModal setRefresh={setRefresh} />
       </div>
       <div className="ml-auto flex items-center gap-x-2">
-        {userOrg ? (
-          <OrganizationSwitcher organization={userOrg} />
+        {org ? (
+          <OrganizationSwitcher organization={org} />
         ) : (
           user && <UserButton user={user} />
         )}

@@ -37,6 +37,19 @@ export const currentUserOrg = async () => {
   return organization;
 };
 
+export const currentUserOrgs = async () => {
+  const session = await getSession();
+  if (!session) return null;
+
+  const organization = await db.organization.findMany({
+    where: {
+      ownerId: session.id as string,
+    },
+  });
+
+  return organization;
+};
+
 export const logout = () => {
   cookies().set("session", "", { expires: new Date(0) });
   return redirect("/");

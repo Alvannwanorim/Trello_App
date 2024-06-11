@@ -10,29 +10,15 @@ import { ModeToggle } from "@/components/global/mode-toggle";
 import { Organization, User } from "@prisma/client";
 import CustomModal from "./custom-modal";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOrganization } from "@/context/organization-context";
+import MobileSidebar from "@/components/global/mobile-sidebar";
 
 const NavBar = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [org, setOrg] = useState<Organization | null>(null);
+  const { organizations, user, currOrg, isLoading } = useOrganization();
+
   const [refresh, setRefresh] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      const userOrg = await currentUserOrg();
-      const currUser = await currentUser();
-
-      if (currUser) {
-        setUser(currUser);
-      }
-      if (userOrg) {
-        setOrg(userOrg);
-      }
-    };
-    fetchData();
-    setIsLoading(false);
-  }, [refresh]);
+  useEffect(() => {}, [refresh]);
 
   if (isLoading) {
     return (
@@ -44,6 +30,7 @@ const NavBar = () => {
 
   return (
     <nav className="fixed top-0 w-full h-14 px-4 border-b shadow-sm bg-white dark:bg-background flex items-center">
+      <MobileSidebar />
       <div className="flex items-center gap-x-4">
         <div className="hidden md:flex">
           <Logo />
@@ -51,7 +38,7 @@ const NavBar = () => {
         <Button
           variant={"link"}
           size={"sm"}
-          className="rounded-sm hidden md:block h-auto py-1.5 px-2"
+          className="rounded-sm hidden md:block h-auto py-1.5 px-2  text-neutral-700 dark:text-muted-foreground"
           id="create-button"
         >
           Create
@@ -68,8 +55,11 @@ const NavBar = () => {
         <CustomModal setRefresh={setRefresh} />
       </div>
       <div className="ml-auto flex items-center gap-x-2">
-        {org ? (
-          <OrganizationSwitcher organization={org} />
+        {currOrg ? (
+          <OrganizationSwitcher
+            organization={currOrg}
+            organizations={organizations}
+          />
         ) : (
           user && <UserButton user={user} />
         )}

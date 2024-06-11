@@ -1,102 +1,69 @@
 "use client";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { currentUser, currentUserOrg } from "@/lib/auth";
-import { Organization, User } from "@prisma/client";
-import { AvatarImage } from "@radix-ui/react-avatar";
-import { ChevronFirst, Plus } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Accordion } from "@/components/ui/accordion";
+import { useOrganization } from "@/context/organization-context";
 import { useLocalStorage } from "usehooks-ts";
+import { useState } from "react";
+import NavItem from "./nav-item";
+import { string } from "zod";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 interface SidebarProps {
   storageKey?: string;
 }
 const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
-  const [activeOrg, setActiveOrg] = useState<Organization | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [expanded, setExpanded] = useLocalStorage<Record<string, any>>(
+  const { organizations, user, currOrg, isLoading } = useOrganization();
+  const [expended, setExpanded] = useLocalStorage<Record<string, any>>(
     storageKey,
     {}
   );
+  const ids = organizations.map((org) => org.id);
 
-  const defaultAccordionValue: string[] = Object.keys(expanded).reduce(
+  const defaultAccordionValue: string[] = Object.keys(expended).reduce(
     (acc: string[], key: string) => {
-      if (expanded[key]) {
+      if (expended[key]) {
         acc.push(key);
       }
       return acc;
     },
     []
   );
-
   const onExpand = (id: string) => {
-    setExpanded((curr) => ({
-      ...curr,
-      [id]: !expanded[id],
+    setExpanded((cur) => ({
+      ...cur,
+      [id]: !expended[id],
     }));
   };
+  console.log(defaultAccordionValue);
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      const org = await currentUserOrg();
-      const user = await currentUser();
-      if (org) {
-        setActiveOrg(org);
-      }
-      if (user) {
-        setUser(user);
-      }
-    };
-    fetchData();
-    setIsLoading(false);
-  }, []);
-
-  let imgUrl;
-  let userInitials;
-  if (user) {
-    imgUrl = user?.image ? user?.image : "";
-    userInitials =
-      user?.first_name.slice(0, 1).toUpperCase() +
-      user?.last_name.slice(0, 1).toUpperCase();
-  }
-  if (isLoading) {
-    return <Skeleton />;
-  }
-
-  if (!activeOrg) {
-    return null;
-  }
   return (
     <>
-      <aside className="h-screen ">
-        <nav className="h-full flex-col border-r shadow-sm">
-          <div className="p-4 pb-2 flex justify-between items-center">
-            <Image
-              src={activeOrg?.logo ? activeOrg.logo : ""}
-              alt=""
-              width={120}
-              height={30}
-            />
-            <Button variant={"ghost"} className="rounded-lg ">
-              <ChevronFirst className="h-4 w-4" />
-            </Button>
-          </div>
-          <ul className="flex-1 px-3">{/* children */}</ul>
-          <div
-            className="border-t flex p-3
-          "
+      <div className="h-screen border-r">
+        <div className=" flex items-center justify-between ">
+          <h1 className="font-semibold text-lg p-2 text-neutral-700 dark:text-muted-foreground">
+            Workspace
+          </h1>
+          <Button variant={"link"}>
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
+        <div className="p-2">
+          <Accordion
+            type="multiple"
+            defaultValue={defaultAccordionValue}
+            className="w-full"
           >
-            <Avatar>
-              <AvatarImage src={`${imgUrl}`} />
-              <AvatarFallback className="">{`${userInitials}`}</AvatarFallback>
-            </Avatar>
-          </div>
-        </nav>
-      </aside>
+            {organizations.map((org, index) => (
+              <NavItem
+                organization={org}
+                key={index}
+                isActive={currOrg?.id === org.id}
+                isExpanded={expended[org.id]}
+                onExpand={onExpand}
+              />
+            ))}
+          </Accordion>
+        </div>
+      </div>
     </>
   );
 };

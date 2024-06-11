@@ -2,26 +2,25 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Organization, User } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
-import { Label } from "@/components/ui/label";
+import { Organization } from "@prisma/client";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import { useOrganization } from "@/context/organization-context";
 
 const OrganizationSwitcher = ({
   organization,
+  organizations,
 }: {
   organization: Organization;
+  organizations: Organization[];
 }) => {
+  const { changeOrg } = useOrganization();
+
   if (!organization) return null;
   const imgUrl = organization?.logo ? organization?.logo : "";
-  const userInitials = organization?.name.slice(0, 2).toUpperCase();
 
   return (
     <>
@@ -32,24 +31,18 @@ const OrganizationSwitcher = ({
             <ChevronDown className="h-4 w-4" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[300px]">
-          <DropdownMenuItem>
-            <div className="flex flex-row w-full items-center justify-start gap-x-2">
-              <Image src={imgUrl} width={80} height={20} alt="" />
-              <h1>{organization.name}</h1>
-            </div>
-          </DropdownMenuItem>
-          <Link href={`/organization`}>
-            <DropdownMenuItem></DropdownMenuItem>
-          </Link>
-          <Link href={`/setting`}>
-            <DropdownMenuItem>Setting</DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <Separator />
-          <DropdownMenuItem>
-            <Button className="w-full rounded-md p-2">Logout </Button>
-          </DropdownMenuItem>
+        <DropdownMenuContent className="w-[200px] flex flex-col gap-y-2">
+          {organizations.map((org, index) => (
+            <DropdownMenuItem key={index}>
+              <div
+                className="flex flex-row w-full items-center justify-start gap-x-3"
+                onClick={() => changeOrg(org.id)}
+              >
+                <Image src={org.logo} width={80} height={20} alt="" />
+                <h1 className="text-accent font-normal">{org.name}</h1>
+              </div>
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

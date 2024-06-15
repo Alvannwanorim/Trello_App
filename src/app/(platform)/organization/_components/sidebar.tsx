@@ -2,11 +2,10 @@
 import { Accordion } from "@/components/ui/accordion";
 import { useOrganization } from "@/context/organization-context";
 import { useLocalStorage } from "usehooks-ts";
-import { useState } from "react";
 import NavItem from "./nav-item";
-import { string } from "zod";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 interface SidebarProps {
   storageKey?: string;
 }
@@ -16,7 +15,7 @@ const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
     storageKey,
     {}
   );
-  const ids = organizations.map((org) => org.id);
+  console.log(isLoading);
 
   const defaultAccordionValue: string[] = Object.keys(expended).reduce(
     (acc: string[], key: string) => {
@@ -33,7 +32,22 @@ const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
       [id]: !expended[id],
     }));
   };
-  console.log(defaultAccordionValue);
+
+  if (isLoading || !organizations || !currOrg) {
+    return (
+      <>
+        <div className="flex items-center justify-between ">
+          <Skeleton className="h-10 w-[50%] bg-gray-200" />
+          <Skeleton className="h-10 w-10  bg-gray-200" />
+        </div>
+        <div className="space-y-2">
+          <NavItem.Skeleton />
+          <NavItem.Skeleton />
+          <NavItem.Skeleton />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

@@ -59,3 +59,9 @@ export const FileUploadSchema = z.object({
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     ),
 });
+
+export const BoardSchema = z.object({
+  title: z.string().min(3, {
+    message: "minimum of three characters allowed",
+  }),
+});

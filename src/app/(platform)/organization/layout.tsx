@@ -10,11 +10,13 @@ const Layout = ({ children }: Props) => {
     <OrganizationProvider>
       <div className="h-screen bg-slate-100 dark:bg-background">
         <NavBar />
-        <main className="flex w-full mt-14">
-          <div className=" w-1/5">
-            <Sidebar />
+        <main className="pt-16 md:pt-34  max-w-6xl 2xl:max-w-screen-xl">
+          <div className="flex gap-x-7">
+            <div className="w-64 shrink-0 hidden md:block">
+              <Sidebar />
+            </div>
+            {children}
           </div>
-          <div className="w-4/5">{children}</div>
         </main>
       </div>
     </OrganizationProvider>

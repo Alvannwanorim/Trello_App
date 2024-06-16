@@ -6,17 +6,16 @@ import NavItem from "./nav-item";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Organization } from "@prisma/client";
 interface SidebarProps {
   storageKey?: string;
 }
 const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
-  const { organizations, user, currOrg, isLoading } = useOrganization();
+  const { organizations, changeOrg, currOrg, isLoading } = useOrganization();
   const [expended, setExpanded] = useLocalStorage<Record<string, any>>(
     storageKey,
     {}
   );
-  console.log(isLoading);
-
   const defaultAccordionValue: string[] = Object.keys(expended).reduce(
     (acc: string[], key: string) => {
       if (expended[key]) {
@@ -66,13 +65,14 @@ const Sidebar = ({ storageKey = "t-sidebar-state" }: SidebarProps) => {
             defaultValue={defaultAccordionValue}
             className="w-full"
           >
-            {organizations.map((org, index) => (
+            {organizations.map((org: Organization, index: any) => (
               <NavItem
                 organization={org}
                 key={index}
                 isActive={currOrg?.id === org.id}
                 isExpanded={expended[org.id]}
                 onExpand={onExpand}
+                changeOrg={changeOrg}
               />
             ))}
           </Accordion>

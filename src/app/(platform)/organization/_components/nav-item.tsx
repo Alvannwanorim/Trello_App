@@ -17,11 +17,13 @@ const NavItem = ({
   isActive,
   isExpanded,
   onExpand,
+  changeOrg,
 }: {
   organization: Organization;
   isActive: boolean;
   isExpanded: boolean;
   onExpand: (id: string) => void;
+  changeOrg: (id: string) => void;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -49,6 +51,7 @@ const NavItem = ({
   ];
 
   const onClick = (href: string) => {
+    changeOrg(organization.id);
     router.push(href);
   };
   return (

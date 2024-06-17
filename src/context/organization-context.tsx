@@ -1,12 +1,15 @@
 "use client";
 import { currentUser, currentUserOrgs } from "@/lib/auth";
-import { Organization, User } from "@prisma/client";
+import { getOrganizationBoards } from "@/lib/queries";
+import { Board, Organization, User } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 type OrganizationContextType = {
   organizations: Organization[] | [];
   user: User | null;
   currOrg: Organization | null;
   changeOrg: (id: string) => void;
+  updateCurrOrgBoards: (id: string) => void;
+  currOrgBoards: Board[] | [];
   isLoading: boolean;
 };
 interface OrganizationProviderProps {
@@ -18,6 +21,8 @@ const organizationContext = createContext<OrganizationContextType>({
   user: null,
   currOrg: null,
   changeOrg: (id: string) => {},
+  updateCurrOrgBoards: (id: string) => {},
+  currOrgBoards: [],
   isLoading: false,
 });
 
@@ -27,6 +32,7 @@ const OrganizationProvider: React.FC<OrganizationProviderProps> = ({
   const [organizations, setOrganizations] = useState<Organization[] | []>([]);
   const [user, setUser] = useState<User | null>(null);
   const [currOrg, setCurrOrg] = useState<Organization | null>(null);
+  const [currOrgBoards, setCurrOrgBoards] = useState<Board[] | []>([]);
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,22 +48,35 @@ const OrganizationProvider: React.FC<OrganizationProviderProps> = ({
 
       if (organizations && organizations?.length > 0) {
         setCurrOrg(organizations[0]);
+        await updateCurrOrgBoards(organizations[0].id);
       }
     };
     fetchData();
     setIsLoading(false);
   }, []);
 
-  const changeOrg = (id: string) => {
+  const changeOrg = async (id: string) => {
     if (organizations) {
       const org = organizations.find((org) => org.id === id);
       if (org) setCurrOrg(org);
     }
   };
+  const updateCurrOrgBoards = async (id: string) => {
+    const boards = await getOrganizationBoards(id);
+    setCurrOrgBoards(boards);
+  };
 
   return (
     <organizationContext.Provider
-      value={{ organizations, user, currOrg, changeOrg, isLoading }}
+      value={{
+        organizations,
+        user,
+        currOrg,
+        changeOrg,
+        isLoading,
+        updateCurrOrgBoards,
+        currOrgBoards,
+      }}
     >
       {children}
     </organizationContext.Provider>

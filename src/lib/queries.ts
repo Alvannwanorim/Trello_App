@@ -15,3 +15,13 @@ export const userOrg = async (userId: string) => {
 
   return orgs;
 };
+
+export const getOrganizationBoards = (id: string) => {
+  const boards = db.board.findMany({
+    where: {
+      orgId: id,
+    },
+  });
+
+  return boards;
+};

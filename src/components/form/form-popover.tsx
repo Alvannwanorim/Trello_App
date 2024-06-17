@@ -53,9 +53,6 @@ const FormPopover = ({
     const organization = formData.get("organization") as string;
 
     execute({ title, file, organization });
-    formData.forEach(function (val, key, fD) {
-      formData.delete(key);
-    });
   };
   return (
     <Popover>

@@ -1,7 +1,9 @@
+"use client";
 import FormPopover from "@/components/form/form-popover";
 import { Hint } from "@/components/global/hint";
 import { HelpCircle, User2 } from "lucide-react";
-import React from "react";
+import React, { Suspense } from "react";
+import CurrentOrgBoard from "./current-org-board";
 
 const BoardList = () => {
   return (
@@ -11,6 +13,7 @@ const BoardList = () => {
         Your Boards
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <CurrentOrgBoard />
         <FormPopover sideOffset={10} side="right">
           <div className="aspect-video relative h-full w-full bg-muted-foreground/50 rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition cursor-pointer">
             <p className="text-sm">Create new board</p>

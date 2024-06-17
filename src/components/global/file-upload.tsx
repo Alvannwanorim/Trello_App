@@ -7,8 +7,8 @@ import { X } from "lucide-react";
 import Loading from "./loading";
 
 interface FileUploadProps {
-  fileError: string;
-  file: string;
+  fileError?: string;
+  file: string | undefined;
   onFileUpload: (url: string) => void;
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
@@ -27,7 +27,6 @@ const FileUpload = ({
 
     reader.onloadend = async () => {
       const base64String = reader.result;
-
       setIsLoading(true);
 
       try {
@@ -41,7 +40,7 @@ const FileUpload = ({
 
         const data = await response.json();
         setIsLoading(false);
-        onFileUpload(data.url); // Pass the uploaded file URL back to the parent component
+        onFileUpload(data.url);
       } catch (error) {
         console.error("Error uploading file:", error);
         setIsLoading(false);
@@ -88,7 +87,7 @@ const FileUpload = ({
           onChange={handleChange}
         />
 
-        <FormError message={fileError} />
+        <FormError message={fileError ? fileError : ""} />
       </div>
     </>
   );

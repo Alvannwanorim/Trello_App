@@ -36,6 +36,7 @@ model User {
   role          Role  @default(USER)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+
 }
  
 model Account {
@@ -94,9 +95,15 @@ model VerificationToken {
   country String
   userIds String[] @db.ObjectId
   users   User[] @relation(fields: [userIds], references: [id])
+  borad   Board[]
  }
 
  model Board {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
+  imageUrl String @map("image_url")
+  orgId String @map("org_id") @db.ObjectId
+  organization Organization @relation(fields: [orgId], references: [id])
+  createdAt           DateTime @map("created_at")  @default(now())
+  updatedAt           DateTime @map("updated_at") @updatedAt
  }

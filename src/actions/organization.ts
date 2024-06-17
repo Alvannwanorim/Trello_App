@@ -61,36 +61,36 @@ export const createOrg = async (
   return { success: "Organization successfully created" };
 };
 
-export const createBoard = async (
-  previousState: FormState,
-  formData: FormData
-) => {
-  try {
-    const validatedField = BoardSchema.safeParse({
-      title: formData.get("title"),
-    });
+// export const createBoard = async (
+//   previousState: FormState,
+//   formData: FormData
+// ) => {
+//   try {
+//     const validatedField = BoardSchema.safeParse({
+//       title: formData.get("title"),
+//     });
 
-    if (!validatedField.success) {
-      return {
-        errors: validatedField.error.flatten().fieldErrors,
-        message: "Missing fields.",
-      };
-    }
-    const { title } = validatedField.data;
+//     if (!validatedField.success) {
+//       return {
+//         errors: validatedField.error.flatten().fieldErrors,
+//         message: "Missing fields.",
+//       };
+//     }
+//     const { title } = validatedField.data;
 
-    const board = await db.board.create({
-      data: {
-        title: title,
-      },
-    });
-  } catch (err) {
-    return {
-      message: "Error creating board",
-    };
-  }
-  revalidatePath("/organization/6665d3f674dbd6e120d4b2c7");
-  redirect("/organization/6665d3f674dbd6e120d4b2c7");
-};
+//     const board = await db.board.create({
+//       data: {
+//         title: title,
+//       },
+//     });
+//   } catch (err) {
+//     return {
+//       message: "Error creating board",
+//     };
+//   }
+//   revalidatePath("/organization/6665d3f674dbd6e120d4b2c7");
+//   redirect("/organization/6665d3f674dbd6e120d4b2c7");
+// };
 
 export const getBoards = async () => {
   const boards = await db.board.findMany();

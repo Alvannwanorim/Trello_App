@@ -14,7 +14,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   if (!user) {
     return redirect("/auth/sing-in");
   }
-  const { title } = data;
+  const { title, organization, file } = data;
 
   let board;
 
@@ -22,6 +22,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     board = await db.board.create({
       data: {
         title,
+        orgId: organization,
+        imageUrl: file,
       },
     });
   } catch (err) {

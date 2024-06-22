@@ -18,7 +18,7 @@ interface FormInputProps {
   defaultValue?: string;
   onBlur?: () => void;
 }
-export const FormInput = forwardRef<HTMLMapElement, FormInputProps>(
+export const FormInput = forwardRef<HTMLElement, FormInputProps>(
   (
     {
       id,

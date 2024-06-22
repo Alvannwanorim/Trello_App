@@ -22,8 +22,6 @@ const CurrentOrgBoard = () => {
     setIsLoading(false);
   }, [organizationId]);
 
-  console.log("current board", isLoading);
-
   if (isLoading) {
     return <CurrentOrgBoard.Skeleton />;
   }
@@ -32,7 +30,7 @@ const CurrentOrgBoard = () => {
       {boards.map((board, index) => (
         <Link
           key={index}
-          href={`/organization/${board?.orgId}/board/${board.id}`}
+          href={`/organization/${board.orgId}/board/${board?.id}`}
           className="group relative aspect-video bg-no-repeat bg-center bg-cover bg-sky-700 rounded-sm h-full w-full p-2"
           style={{ backgroundImage: `url(${board.imageUrl})` }}
         >

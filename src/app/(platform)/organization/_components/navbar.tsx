@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import OrganizationSwitcher from "./organization-switcher";
-import { currentUser, currentUserOrg } from "@/lib/auth";
+
 import UserButton from "@/components/global/user-button";
 import { ModeToggle } from "@/components/global/mode-toggle";
-import { Organization, User } from "@prisma/client";
+
 import CustomModal from "./custom-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrganization } from "@/context/organization-context";

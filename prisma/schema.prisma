@@ -102,8 +102,39 @@ model VerificationToken {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
   imageUrl String @map("image_url")
+
   orgId String @map("org_id") @db.ObjectId
   organization Organization @relation(fields: [orgId], references: [id])
+
+  lists List[]
   createdAt           DateTime @map("created_at")  @default(now())
   updatedAt           DateTime @map("updated_at") @updatedAt
+ }
+
+ model List {
+  id String @id @default(auto()) @db.ObjectId @map("_id")
+
+  title String
+  order Int
+
+  boardId String @db.ObjectId @map("board_id")
+  baord   Board @relation(fields: [boardId], references: [id], onDelete: Cascade) 
+
+  cards Card[]
+
+  @@index([boardId])
+
+ }
+
+  model Card {
+  id String @id @default(auto()) @db.ObjectId @map("_id")
+
+  title String
+  order Int
+  description String? 
+
+  listId String @db.ObjectId @map("list_id")
+  list   List @relation(fields: [listId], references: [id], onDelete: Cascade) 
+
+  @@index([listId])
  }

@@ -1,8 +1,7 @@
-import { getBoard } from "@/actions/create-board/queries";
-
 import React from "react";
 import ErrorPage from "./not-found";
 import BoardNavbar from "./_components/board-navbar";
+import { getBoard } from "@/actions/queries";
 
 export async function generateMetadata({
   params,

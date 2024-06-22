@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 interface FormSubmitProps {
   children: React.ReactNode;
   disabled?: boolean;
-  className: string;
+  className?: string;
   variant?:
     | "default"
     | "destructive"

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
-import { UpdatedBoardSchema } from "./schema";
+import { UpdatedListSchema } from "./schema";
 
 const handler = async (data: InputType) => {
   const user = currentUser();
@@ -13,13 +13,26 @@ const handler = async (data: InputType) => {
     return redirect("/auth/sign-in");
   }
 
-  const { title, id } = data;
+  const { title, id, boardId } = data;
 
-  let board;
+  const board = await db.board.findUnique({
+    where: {
+      id: boardId,
+    },
+  });
+
+  if (!board) {
+    return {
+      error: "Board not found",
+    };
+  }
+
+  let list;
   try {
-    board = await db.board.update({
+    list = await db.list.update({
       where: {
         id,
+        boardId,
       },
       data: {
         title,
@@ -34,7 +47,7 @@ const handler = async (data: InputType) => {
   }
   revalidatePath(`/organization/${board.orgId}/board/${board.id}`);
 
-  return { data: board };
+  return { data: list };
 };
 
-export const updateBoard = createSafeAction(UpdatedBoardSchema, handler);
+export const updateList = createSafeAction(UpdatedListSchema, handler);
